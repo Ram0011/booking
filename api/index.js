@@ -27,7 +27,11 @@ app.use(cors({
     origin: 'http://localhost:5173'
 }));
 
-mongoose.connect(process.env.MONGO_URL);
+mongoose.connect(process.env.MONGO_URL).then(() => {
+    console.log("Database connected")
+}).catch(() => {
+    console.log("Failed to connect");
+})
 
 function getUserDataFromReq(req) {
     return new Promise((resolve, reject) => {
@@ -70,8 +74,8 @@ app.post('/login', async (req, res) => {
             }, jwtSecret, {}, (err, token) => {
                 if (err) throw err;
                 res.cookie('token', token).json(userDoc);
+                res.status(200);
             })
-
         } else {
             res.status(422).json('pass not ok');
         }

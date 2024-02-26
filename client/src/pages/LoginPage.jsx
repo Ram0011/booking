@@ -13,10 +13,15 @@ export default function LoginPage() {
     async function handleLoginSubmit(ev) {
         ev.preventDefault();
         try {
-            const { data } = await axios.post('/login', { email, password });
-            setUser(data);
-            alert("login sucessfull!");
-            setRedirect(true);
+            const response = await axios.post('/login', { email, password });
+            console.log(response);
+            if (response.data !== 'not found') {
+                setUser(response.data);
+                alert("login sucessfull!");
+                setRedirect(true);
+            } else {
+                alert("Wrong credentials");
+            }
         } catch (e) {
             alert("login failed!");
         }
